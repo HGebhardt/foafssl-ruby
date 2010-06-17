@@ -5,9 +5,9 @@ FOAFSSL implements the FOAF+SSL authentication mechanism as a
 middleware application for Rack.
 
 In short, the client provides a classical __X509 Certificate__
-containing a (http://esw.w3.org/WebID)[WebID] in the _subjectAltName_.
+containing a [WebID](http://esw.w3.org/WebID) in the _subjectAltName_.
 The library will extract that information from the given certificate
-and read the (http://www.foaf-project.org/)[FOAF] file at this URL.
+and read the [FOAF](http://www.foaf-project.org/) file at this URL.
 If it mentions the correct __RSAPublicKey__ for the certificate, then
 the authentication is successful.
 
@@ -17,11 +17,15 @@ the authentication is successful.
 __FOAFSSL__ can be used directly as a Rake middleware, in which case
 it will save the authentication result into the rack.session.
 
--> (http://github.com/hellekin/foafssl-ruby/blob/master/lib/foafssl/authentication.rb)[FOAFSSL::Authentication]
+-> [FOAFSSL::Authentication](http://github.com/hellekin/foafssl-ruby/blob/master/lib/foafssl/authentication.rb)
 
 It also comes as a Warden Strategy.
 
-@see (http://github.com/hellekin/foafssl-ruby/blob/master/lib/foafssl/warden.rb)[FOAFSSL::Warden]
+-> [FOAFSSL::Warden](http://github.com/hellekin/foafssl-ruby/blob/master/lib/foafssl/warden.rb)
+
+### License
+
+`foafssl-ruby` is free software released under the GNU Affero Public License. (See [COPYING](/hellekin/foafssl-ruby/blob/master/COPYING).)
 
 ## Requirements
 
@@ -65,23 +69,23 @@ docs about it. Here is the relevant bits for FOAF+SSL:
 #### Some explanations:
 
 The /signon Location directive explicitely requires a client
-certificate (SSLRequireSSL).
+certificate (`SSLRequireSSL`).
 
 The Issuer verification is minimal (optional_no_ca means it won't
 complain if the CA isn't trusted) because we don't care.  We only want
 to match the RSAPublicKey with the WebID, i.e. demonstrate that the
 user connecting to our service is the one publishing the FOAF file.
 
-SSLVerifyDepth 1 tells Apache to limit the CA certificate chain to 1
-(instead of default 10) so we speed up the process *as we don't care
-about the CA trust mechanism*. Finally, SSLOption +ExportCertData
-tells Apache to fill the SSL_CLIENT_CERT with the file (in PEM format)
+`SSLVerifyDepth 1` tells Apache to limit the CA certificate chain to 1
+(instead of default 10) so we speed up the process __as we don't care
+about the CA trust mechanism__. Finally, `SSLOption +ExportCertData`
+tells Apache to fill the `SSL_CLIENT_CERT` with the file (in PEM format)
 it received from the client.  
 
 This last point is important, because FOAFSSL uses two headers:
-HTTP_X_FORWARDED_PROTO and HTTP_SSL_CLIENT_CERT.  The HTTP_ prefix is
-added by Rack, so Apache2 has to set X_FORWARDED_PROTO and
-SSL_CLIENT_CERT:
+`HTTP_X_FORWARDED_PROTO` and `HTTP_SSL_CLIENT_CERT`.  The HTTP_ prefix is
+added by Rack, so Apache2 has to set `X_FORWARDED_PROTO` and
+`SSL_CLIENT_CERT`:
 
     RequestHeader set X_FORWARDED_PROTO   'https'
     RequestHeader set SSL_CLIENT_CERT     %{SSL_CLIENT_CERT}e
@@ -98,9 +102,9 @@ TODO
 
 You can generate the Yard documentation by running rake doc:simple.
 
-It requires yard: sudo gem install yard
+It requires yard: `sudo gem install yard`
 
-If you're a developer, you might want to run rake doc:all instead.
+If you're a developer, you might want to run `rake doc:all` instead.
 
 ## Example
 
@@ -123,11 +127,11 @@ In your ApplicationController, create a before_filter:
       end
     end
 
-If FOAFSSL performed authentication, it set
-<tt>session[:foafssl_authenticated]</tt> to either +false+
-(authentication failed) or an Array containing the WebID (an URI), the
-public exponent of the RSAPublicKey from the authenticated SSL
-Certificate, and the modulus of that key.  
+If __FOAFSSL__ performed authentication, it set
+`session[:foafssl_authenticated]` to either __false__ (authentication
+failed) or an __Array__ containing the WebID (an URI), the public
+exponent of the RSAPublicKey from the authenticated SSL Certificate,
+and the modulus of that key.
 
 With that, you can retry verification (if you don't trust the FOAFSSL
 library) but otherwise, only the WebID is useful: due to the nature of
